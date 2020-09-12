@@ -418,12 +418,10 @@ class Validation():
     @staticmethod
     def check_ip4(instace, attribute, value):
         try:
-            if value != '':  # FIXME JBOD
+            if value is not UNCHANGED:
                 ipaddress.IPv4Address(value)
         except ValueError:
-            raise ValueError(
-                f"{attribute.name}: invalid ip4 address {value}"
-            )
+            raise ValueError(f"{attribute.name}: invalid ip4 address")
 
 
 @attr.s(auto_attribs=True)
@@ -484,10 +482,6 @@ class NodeNetworkParams():
     hostname: str = ParamGroupInputBase._attr_ib(
         _param_group, descr="node hostname"
     )
-    is_primary: bool = ParamGroupInputBase._attr_ib(
-        _param_group, descr="mark node as a primary",
-        converter=bool
-    )
     data_nw_iface: List = ParamGroupInputBase._attr_ib(
         _param_group, descr="node data network iface"
     )
@@ -499,18 +493,6 @@ class NodeNetworkParams():
     )
     public_ip_addr: str = ParamGroupInputBase._attr_ib(
         _param_group, descr="node data iface IP", default=UNCHANGED,
-        validator=Validation.check_ip4
-    )
-    data_nw_netmask: str = ParamGroupInputBase._attr_ib(
-        _param_group, descr="node data iface netmask",
-        validator=Validation.check_ip4
-    )
-    data_nw_gateway: str = ParamGroupInputBase._attr_ib(
-        _param_group, descr="node data gateway IP",
-        validator=Validation.check_ip4
-    )
-    pvt_ip_addr: str = ParamGroupInputBase._attr_ib(
-        _param_group, descr="node data iface private IP",
         validator=Validation.check_ip4
     )
     bmc_ip: str = ParamGroupInputBase._attr_ib(

@@ -35,4 +35,4 @@ saltstack_installed:
 #      once it would be availble better for target platforms
 gitfs_fileserver_deps_installed:
   pkg.installed:
-    - name: GitPython   # FIXME JBOD
+    - name: python36-GitPython
