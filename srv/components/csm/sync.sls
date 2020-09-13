@@ -15,12 +15,7 @@
 # please email opensource@seagate.com or cortx-questions@seagate.com."
 #
 
-# TODO IMPROVE EOS-8473 move to pillar to make configurable
-{% set install_dir = '/opt/seagate/cortx/provisioner' %}
-
-repo_installed:
-  file.recurse:
-    - name: {{ install_dir }}
-    - source: salt://provisioner/files/repo
-    - keep_source: True
-    - clean: True  # ???
+Stage - Sync files for CSM:
+  module.run:
+    - sync.sync_files:
+      - component: csm
