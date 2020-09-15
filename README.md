@@ -18,7 +18,7 @@ Jump to the [CORTX-Provisioner Quickstart Guide](Cortx-ProvisionerQuickstartGuid
 
 ## Contribute to CORTX-Provisioner
 
-We welcome all Source Code and Documentation contributions to the CORTX-Provisioner repositories. Refer to the [CORTX- Provisioner Contribution Guide](../dev/docs/ContributingToCortxPrvsnr.md) to submit your contributions. 
+We welcome all Source Code and Documentation contributions to the CORTX-Provisioner repositories. Refer to the [CORTX- Provisioner Contribution Guide](../dev/docs/ContributingToCortxPrvsnr.md) to submit your contributions. Please also read and contribute to our [Wiki](https://github.com/Seagate/cortx-prvsnr/wiki) where we maintain a lot more documentation about our repositories.
 
 ## CORTX Community
 
