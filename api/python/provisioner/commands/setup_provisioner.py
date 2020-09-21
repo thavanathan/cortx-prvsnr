@@ -1278,6 +1278,14 @@ class SetupProvisioner(CommandParserFillerMixin):
             ), targets=run_args.primary.minion_id
         )
 
+        logger.info("Updating node_list in cluster.sls")
+        ssh_client.cmd_run(
+            (
+                f"python3 -c \"import provisioner; "
+                f"provisioner.pillar_set('cluster/node_list',{nodes_ids})\""
+            ), targets=run_args.primary.minion_id
+        )
+
         if run_args.target_build:
             logger.info("Updating target build pillar")
             ssh_client.cmd_run(
