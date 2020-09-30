@@ -19,7 +19,11 @@
 include:
   - components.system.storage.prepare
   - components.system.storage.install
+{% if not 'JBOD' in pillar["storage_enclosure"]["type"] %}
   - components.system.storage.config
+{% elseif %}
+  - components.system.storage.config_jbod
+{% endif %}
 
 Generate storage checkpoint flag:
   file.managed:
