@@ -29,7 +29,6 @@ class NetworkValidations():
     @staticmethod
     def check_ping(ip):
         """ Check if IP's are reachable"""
-        print(ip)
         cmd = f"ping -c 1 {ip}"
         response = run_subprocess_cmd(cmd)
         res = []

@@ -19,12 +19,20 @@
 # Registry file which will make a call to 
 # All the other validate functions
 
-
+import config
 from scripts.utils.network_checks import NetworkValidations
 from scripts.utils.pillar_get import PillarGet
 from scripts.factory.server_check import ServerValidations
 from scripts.factory.network_check import NetworkChecks
+from scripts.factory.storage_check import StorageValidations
  
+
+class_mapper = {
+    'server_validation': ServerValidations,
+    'netowrk_validation': NetworkChecks,
+    'storage_validation': StorageValidations
+}
+
 class FactoryDeploymentValidations():
     ''' Validations for before and after of \
         Factory/Manufacturing Deployment
@@ -35,11 +43,17 @@ class FactoryDeploymentValidations():
         '''
         pass
 
-    #list_of_functions_to_be_validated
-    #checks_to_validate = [func_1(), func_2()]
-    #res = NetworkChecks.verify_mgmt_vip()
-    #print(res)
-    res = NetworkChecks.verify_private_data_ip()
-    print(res)
-    #res = PillarGet.get_pillar("cluster:node_list")
-    #print(type(res['response']))
+    @staticmethod
+    def factory_checks():
+        check_list = config.FACTORY_POST_CHECK
+        for check, cls in check_list.items():
+            res = getattr(class_mapper[cls], check)()
+            if res:
+               if res['ret_code']:
+                   print(f"{check}: Failed : {res['message']}")
+                   #print(f"Response: {res}")
+               else:
+                   print(f"{check}: Success : {res['message']}")
+                   
+
+FactoryDeploymentValidations.factory_checks()

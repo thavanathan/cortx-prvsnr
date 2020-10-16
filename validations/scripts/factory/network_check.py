@@ -69,7 +69,6 @@ class NetworkChecks():
             nodes = res['response']
         else:
             return res
-        print(nodes)
         for node in nodes:
             result = PillarGet.get_pillar(f"cluster:{node}:network:data_nw:public_ip_addr")
             if result['ret_code']:
@@ -95,7 +94,6 @@ class NetworkChecks():
             nodes = res['response']
         else:
             return res
-        print(nodes)
         for node in nodes:
             result = PillarGet.get_pillar(f"cluster:{node}:network:data_nw:pvt_ip_addr")
             if result['ret_code']:

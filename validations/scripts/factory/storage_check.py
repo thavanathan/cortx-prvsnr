@@ -30,7 +30,7 @@ from ..utils.common import run_subprocess_cmd
 logger = logging.getLogger(__name__)
 
 
-class ServerValidations():
+class StorageValidations():
 
     def __init__(self):
         ''' Server validations
@@ -38,9 +38,8 @@ class ServerValidations():
         pass
 
     @staticmethod
-    def verify_nodes_online():
-        ''' Validations for nodes 
-        '''
+    def verify_luns_consistency():
+        ''' Validations for LUNs are consistent across nodes '''
         res = PillarGet.get_pillar("cluster:node_list")
         nodes = []
         response = {}
@@ -49,40 +48,24 @@ class ServerValidations():
         else:
             return res
         for node in nodes:
-            result = NetworkValidations.check_ping(node)
-            if not response.get("response", None):
-                response = result
-            else:
-                if result['ret_code']:
-                    response['ret_code'] = result['ret_code']
-                response['response'] = [ response['response'], result['response'] ]
-                response['message'] = [ response['message'], result['message'] ]
-        return response           
-
-    @staticmethod
-    def verif_node_communication():
-        """ validation salt '*' test.ping"""
-        res = PillarGet.get_pillar("cluster:node_list")
-        nodes = []
-        response = {}
-        if not res['ret_code']:
-            nodes = res['response']
-        else:
-            return res
-        for node in nodes:
-            result = run_subprocess_cmd(f"salt {node} test.ping --out=json", timeout=10)
-            if result[0]:
-                message = f"Failed to communicate to {node}"
-            else:
-                message = f"Able to communicate to {node}"
+            result = run_subprocess_cmd(f"ssh srvnode-1 lsblk -S | wc -l")
+            message = ''
             if not response.get("response", None):
                 response['ret_code'] = result[0]
                 response['response'] = result[1]
                 response['error_msg'] = result[2]
-                response['message'] = message
             else:
                 if result[0]:
                     response['ret_code'] = result[0]
                 response['response'] = [ response['response'], result[1] ]
-                response['message'] = [ response['message'], message ]
+        if len(nodes) > 1:
+            pre_res = 0
+            flag = True
+            for resp in response['response']:
+                if pre_res and pre_res != resp:
+                    flag = False
+            if not flag:
+                response['message'] = "Number of luns are not same on nodes"
+            else:
+                response['message'] = "Number of luns are same on nodes"
         return response
