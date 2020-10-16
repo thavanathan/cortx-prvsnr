@@ -22,7 +22,6 @@ import time
 import yaml
 import os, sys
 parent_dir_name = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-print (parent_dir_name)
 sys.path.append(parent_dir_name + "/utils")
 
 from pathlib import Path, PosixPath
@@ -103,12 +102,16 @@ def run_subprocess_cmd(cmd, **kwargs):
     try:
         logger.debug(f"Subprocess command {cmd}, kwargs: {_kwargs}")
         res = subprocess.run(cmd, **_kwargs)
+    except subprocess.TimeoutExpired as exc:
+        result = (1, str(exc), repr(exc))
     except (subprocess.CalledProcessError, FileNotFoundError) as exc:
         logger.exception(f"Failed to run cmd '{cmd}'")
         raise SubprocessCmdError(cmd, _kwargs, repr(exc)) from exc
+        result = () 
     else:
         logger.debug(f"Subprocess command resulted in: {res}")
-        return res.returncode, res.stdout, res.stderr
+        result = (res.returncode, res.stdout, res.stderr)
+    return result
 
 
 def get_repo_archive_exclusions():

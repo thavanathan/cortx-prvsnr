@@ -20,19 +20,11 @@
 # All the other validate functions
 
 
-from typing import (
-    Tuple,
-    Union,
-    Optional,
-    List
-)
-
-from errors import (
-    ProvisionerError, SubprocessCmdError
-)
-
-logger = logging.getLogger(__name__)
-
+from scripts.utils.network_checks import NetworkValidations
+from scripts.utils.pillar_get import PillarGet
+from scripts.factory.server_check import ServerValidations
+from scripts.factory.network_check import NetworkChecks
+ 
 class FactoryDeploymentValidations():
     ''' Validations for before and after of \
         Factory/Manufacturing Deployment
@@ -44,4 +36,10 @@ class FactoryDeploymentValidations():
         pass
 
     #list_of_functions_to_be_validated
-    checks_to_validate = [func_1(), func_2()]
+    #checks_to_validate = [func_1(), func_2()]
+    #res = NetworkChecks.verify_mgmt_vip()
+    #print(res)
+    res = NetworkChecks.verify_private_data_ip()
+    print(res)
+    #res = PillarGet.get_pillar("cluster:node_list")
+    #print(type(res['response']))
