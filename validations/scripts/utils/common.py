@@ -105,9 +105,7 @@ def run_subprocess_cmd(cmd, **kwargs):
     except subprocess.TimeoutExpired as exc:
         result = (1, str(exc), repr(exc))
     except (subprocess.CalledProcessError, FileNotFoundError) as exc:
-        logger.exception(f"Failed to run cmd '{cmd}'")
-        raise SubprocessCmdError(cmd, _kwargs, repr(exc)) from exc
-        result = () 
+        result = (1, str(exc), repr(exc))
     else:
         logger.debug(f"Subprocess command resulted in: {res}")
         result = (res.returncode, res.stdout, res.stderr)
